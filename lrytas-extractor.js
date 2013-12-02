@@ -43,9 +43,7 @@ var extract = function(url, newerThan, callback) {
 			$commentLinks = $('a.k'),
 			options = {newerThan: newerThan, host: url},
 			fetchers = 
-				createCommentFetchers($commentLinks, options, $);
-
-			console.log('Articles have comments: ' + $commentLinks.length);
+				createCommentFetchers($commentLinks, options, $);			
 
 		var parallelCallback = function(err, results){
    			if (err) {
@@ -53,15 +51,14 @@ var extract = function(url, newerThan, callback) {
    			}
 
    			var comments = [];
-   			console.log(results);
-
-   			results.each(function(resultArray) {
-   				comments.concat(resultArray);
-   			});
+   			
+   			results.forEach(function(resultArray) {
+   				comments = comments.concat(resultArray);                
+   			});            
 
    			callback(null, comments);
 		}	
-		console.log(fetchers.length + ' fetchers');
+		
 		async.parallel(fetchers, parallelCallback);
 	});
 }

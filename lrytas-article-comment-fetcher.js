@@ -2,15 +2,15 @@ var request = require('request');
 var cheerio = require('cheerio');
 var util = require('util');
 
-function getNextLink(currentUrl, $) {
+function getNextLink(queryString, $) {
 	var nextLink = $('.str-pages-div')
 					.children()
 					.last()
-					.attr('href');	
-
+					.attr('href');
+	
 	var shouldReadNext = nextLink !== undefined && 
 						 nextLink !== null &&
-						 currentUrl !== nextLink;
+						 queryString !== nextLink;	
 						 
 	return shouldReadNext ? nextLink : null;
 }
@@ -20,16 +20,15 @@ function anyUndefined(options) {
 		!options.articleName ||
 		!options.commentsUrl ||
 		!options.portalName ||
-		!options.newerThan) {
-		console.log(options);
+		!options.newerThan) {		
 		return new Error('All options must be specified');
 	}
 }
 
-function getFullUrl(host, url) {
-	return	url.indexOf('http://') > -1 ? 
-			url : 
-			host + url;
+function getFullUrl(host, queryString) {
+	return	queryString.indexOf('http://') > -1 ? 
+			queryString : 
+			host + queryString;
 }
 
 var fetch = function fetch(options, callback) {
@@ -37,10 +36,11 @@ var fetch = function fetch(options, callback) {
 	var commentArray = [];	
 
 	// closure functions
-	function getCommentsRecursive(url) {
+	function getCommentsRecursive(queryString) {
 
-		url = getFullUrl(options.host, url);
-		request(url, function(err, resp, body) {
+		var fullUrl = getFullUrl(options.host, queryString);
+		
+		request(fullUrl, function(err, resp, body) {
 			if (err) {
 				return callback(err, null);
 			}
@@ -48,7 +48,7 @@ var fetch = function fetch(options, callback) {
 			var $ = cheerio.load(body);
 
 			var hasOld = extractComments($),
-				moreCommentsLink = getNextLink(url, $);			
+				moreCommentsLink = getNextLink(queryString, $);			
 
 			if (!hasOld && moreCommentsLink) {					
 				getCommentsRecursive(moreCommentsLink);
