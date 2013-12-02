@@ -23,7 +23,7 @@ function createSingleFetcher(el, options, $) {
 			articleUrl: '',
 			articleName: articleLink.text().trim(),
 			commentsUrl: $el.attr('href'),
-			portalName: 'LRytas',
+			portalName: PORTAL_NAME,
 			newerThan: options.newerThan,
 			host: options.host
 		}
