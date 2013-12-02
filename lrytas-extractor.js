@@ -8,7 +8,7 @@ var fetch = require('./lrytas-article-comment-fetcher').fetch;
 var PORTAL_NAME = 'LRytas';
 
 function createCommentFetchers(links, options, $) {	
-	return links.map(function(link) {
+	return links.map(function(i, link) {
 		return createSingleFetcher(link, options, $);
 	});	
 }

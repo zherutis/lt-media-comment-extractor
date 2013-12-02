@@ -50,12 +50,9 @@ var fetch = function fetch(options, callback) {
 			var hasOld = extractComments($),
 				moreCommentsLink = getNextLink(url, $);			
 
-			if (!hasOld && moreCommentsLink) {	
-				console.log(options.articleName);
+			if (!hasOld && moreCommentsLink) {					
 				getCommentsRecursive(moreCommentsLink);
-			} else {
-
-				console.log(commentArray.length);
+			} else {				
 				callback(null, commentArray);
 			}
 		});
@@ -94,9 +91,7 @@ var fetch = function fetch(options, callback) {
 
 	if (err){
 		return callback(err, null);
-	}	
-
-	console.log(options.articleName + ' start');
+	}		
 	getCommentsRecursive(options.commentsUrl);
 };
 
