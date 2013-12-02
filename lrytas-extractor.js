@@ -13,19 +13,26 @@ function createCommentFetchers(links, options, $) {
 	});	
 }
 
+function getFullUrl(host, queryString) {
+    return  queryString.indexOf('http://') > -1 ? 
+            queryString : 
+            host + queryString;
+}
+
 function createSingleFetcher(el, options, $) {
 	return function(callback) {
 
 		var $el = $(el),
-			articleLink = $el.closest('.nw').prev();			
+			$articleLink = $el.closest('.nw').prev();			
 
 		var fetchOptions = { 
-			articleUrl: '',
-			articleName: articleLink.text().trim(),
+			articleUrl: getFullUrl(options.host, $articleLink.attr('href')),
+			articleName: $articleLink.text().trim(),
 			commentsUrl: $el.attr('href'),
 			portalName: PORTAL_NAME,
 			newerThan: options.newerThan,
-			host: options.host
+			host: options.host,
+            getFullUrl: getFullUrl
 		}
 
 		fetch(fetchOptions, callback);

@@ -16,7 +16,7 @@ function getNextLink(queryString, $) {
 }
 
 function anyUndefined(options) {
-	if (options.articleUrl == undefined|| 
+	if (!options.articleUrl || 
 		!options.articleName ||
 		!options.commentsUrl ||
 		!options.portalName ||
@@ -25,15 +25,10 @@ function anyUndefined(options) {
 	}
 }
 
-function getFullUrl(host, queryString) {
-	return	queryString.indexOf('http://') > -1 ? 
-			queryString : 
-			host + queryString;
-}
-
 var fetch = function fetch(options, callback) {
 	// closure variables
-	var commentArray = [];	
+	var getFullUrl = options.getFullUrl,
+		commentArray = [];	
 
 	// closure functions
 	function getCommentsRecursive(queryString) {
@@ -72,6 +67,7 @@ var fetch = function fetch(options, callback) {
 					comment = {
 						portal: options.portalName,
 						article: options.articleName,
+						articleUrl: options.articleUrl,
 						time: time,
 						ip: ip,
 						text: commentText

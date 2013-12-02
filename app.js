@@ -28,6 +28,8 @@ extract(hostname, new Date('2013-11-19'), function(err, comments) {
 
 	var ts2 = Date.now();
 
+    console.log(comments);
+
 	console.log('# of comments: ' + comments.length);
 	console.log(ts2 - ts1);
 	console.log('end');
