@@ -25,6 +25,10 @@ function anyUndefined(options) {
 	}
 }
 
+function getRandomWait(min, max) {
+  return Math.ceil((Math.random() * (max - min) + min) * 1000);  
+}
+
 var fetch = function fetch(options, callback) {
 	// closure variables
 	var getFullUrl = options.getFullUrl,
@@ -35,6 +39,8 @@ var fetch = function fetch(options, callback) {
 
 		var fullUrl = getFullUrl(options.host, queryString);
 		
+		console.log(options.articleName);
+
 		request(fullUrl, function(err, resp, body) {
 			if (err) {
 				return callback(err, null);
@@ -45,8 +51,13 @@ var fetch = function fetch(options, callback) {
 			var hasOld = extractComments($),
 				moreCommentsLink = getNextLink(queryString, $);			
 
-			if (!hasOld && moreCommentsLink) {					
-				getCommentsRecursive(moreCommentsLink);
+			if (!hasOld && moreCommentsLink) {	
+				setTimeout(
+					getCommentsRecursive, 
+					getRandomWait(options.waitTime.min, options.waitTime.max),
+					moreCommentsLink);
+
+				//getCommentsRecursive(moreCommentsLink);
 			} else {				
 				callback(null, commentArray);
 			}
@@ -87,8 +98,16 @@ var fetch = function fetch(options, callback) {
 
 	if (err){
 		return callback(err, null);
-	}		
-	getCommentsRecursive(options.commentsUrl);
+	}	
+
+	var waitTime = getRandomWait(0, options.waitTime.max);
+
+	console.log(options.articleName + ': ' + waitTime);
+
+	setTimeout(
+		getCommentsRecursive, 
+		waitTime,
+		options.commentsUrl);		
 };
 
 module.exports.fetch = fetch;

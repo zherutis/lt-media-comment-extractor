@@ -32,6 +32,7 @@ function createSingleFetcher(el, options, $) {
 			portalName: PORTAL_NAME,
 			newerThan: options.newerThan,
 			host: options.host,
+			waitTime: options.waitTime,
             getFullUrl: getFullUrl
 		}
 
@@ -39,7 +40,9 @@ function createSingleFetcher(el, options, $) {
 	};
 }
 
-var extract = function(url, newerThan, callback) {
+var extract = function(options, callback) {
+
+	var url = options.host;
 
 	request(url, function(err, resp, body) {
 		if (err) {
@@ -48,7 +51,7 @@ var extract = function(url, newerThan, callback) {
 
 		var $ = cheerio.load(body),
 			$commentLinks = $('a.k'),
-			options = {newerThan: newerThan, host: url},
+			//options = {newerThan: newerThan, host: url},
 			fetchers = 
 				createCommentFetchers($commentLinks, options, $);			
 
